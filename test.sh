@@ -41,7 +41,7 @@ function contract() {
 
 function resourcea() {
     http --timeout=300 http://localhost:8080/api/resourcea Authorization:"Bearer $(get_token_by_user $1)"
-    #curl -v -X GET http://localhost:8080/api/resourcea -H Authorization:"Bearer "$(get_token_by_user $1)
+    curl -v -X GET http://localhost:8080/api/resourcea -H Authorization:"Bearer "$(get_token_by_user $1)
 }
 
 function premium() {
@@ -53,11 +53,21 @@ function resourceb() {
 }
 
 function admin() {
-    #http http://localhost:8080/api/admin Authorization:"Bearer $(get_token_by_user $1)"
+    # no claim-value
+    # http http://localhost:8080/api/admin Authorization:"Bearer $(get_token_by_user $1)"
     # Header
-    http http://localhost:8080/api/admin Authorization:"Bearer $(get_token_by_user $1)" parameter-a:claim-value
+    # http --timeout=300 http://localhost:8080/api/admin Authorization:"Bearer $(get_token_by_user $1)" parameter-a:claim-value
     # application/x-www-form-urlencoded parameters
     #http http://localhost:8080/api/admin Authorization:"Bearer $(get_token_by_user $1)" parameter-a=claim-value
     # URL parameters (?q=search)
-    http http://localhost:8080/api/admin Authorization:"Bearer $(get_token_by_user $1)" parameter-a==claim-value
+    http --timeout=300 http://localhost:8080/api/admin Authorization:"Bearer $(get_token_by_user $1)" parameter-a==claim-value
+}
+
+function rpt() {
+    http --form POST http://keycloak.waret.net/auth/realms/spring-boot-quickstart/protocol/openid-connect/token Authorization:"Bearer "$(get_token_by_user $1) Content-Type:application/x-www-form-urlencoded grant_type=urn:ietf:params:oauth:grant-type:uma-ticket audience=ms-confidential | jq --raw-output '.access_token'
+}
+
+function resourcea_rpt() {
+    http --timeout=300 http://localhost:8080/api/resourcea Authorization:"Bearer $(rpt $1)"
+    #curl -v -X GET http://localhost:8080/api/resourcea -H Authorization:"Bearer "$(get_token_by_user $1)
 }

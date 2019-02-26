@@ -24,7 +24,7 @@
                 "user", "uma_authorization"
             ],
             "clientRoles": {
-                "resource-photoz": [
+                "photoz-resource": [
                     "manage-albums"
                 ],
                 "account": [
@@ -49,7 +49,7 @@
                 "user-premium"
             ],
             "clientRoles": {
-                "resource-photoz": [
+                "photoz-resource": [
                     "manage-albums"
                 ],
                 "account": [
@@ -76,12 +76,21 @@
                 "realm-management": [
                     "realm-admin"
                 ],
-                "resource-photoz": [
+                "photoz-resource": [
                     "manage-albums"
                 ],
                 "account": [
                     "manage-account"
                 ]
+            }
+        },
+        {
+            "username": "service-account-photoz-resource",
+            "enabled": true,
+            "email": "service-account-photoz-resource@placeholder.org",
+            "serviceAccountClientId": "photoz-resource",
+            "clientRoles": {
+                "photoz-resource" : ["uma_protection"]
             }
         }
     ],
@@ -99,7 +108,7 @@
     },
     "clients": [
         {
-            "clientId": "resource-alice",
+            "clientId": "photoz-resource",
             "secret": "secret",
             "enabled": true,
             "baseUrl": "http://localhost:8080",
@@ -114,98 +123,20 @@
                 "policyEnforcementMode": "ENFORCING",
                 "resources": [
                     {
-                        "name": "Default Resource",
-                        "uri": "/api/{resource}"
+                        "name": "Alpha: Default Resource",
+                        "uri": "/alpha/api/{resource}"
                     },
                     {
-                        "name": "Premium Resource",
-                        "uri": "/api/premium"
+                        "name": "Alpha: Premium Resource",
+                        "uri": "/alpha/api/premium"
                     },
                     {
-                        "name": "Admin Resource",
-                        "uri": "/api/admin"
-                    }
-                ],
-                "policies": [
-                    {
-                        "name": "Only Premium User Policy",
-                        "type": "role",
-                        "logic": "POSITIVE",
-                        "decisionStrategy": "UNANIMOUS",
-                        "config": {
-                            "roles": "[{\"id\":\"user-premium\",\"required\":false}]"
-                        }
+                        "name": "Alpha: Admin Resource",
+                        "uri": "/alpha/api/admin"
                     },
                     {
-                        "name": "Only User Policy",
-                        "type": "role",
-                        "logic": "POSITIVE",
-                        "decisionStrategy": "UNANIMOUS",
-                        "config": {
-                            "roles": "[{\"id\":\"user\",\"required\":false}]"
-                        }
-                    },
-                    {
-                        "name": "Claim-Based Policy",
-                        "type": "js",
-                        "logic": "POSITIVE",
-                        "decisionStrategy": "UNANIMOUS",
-                        "config": {
-                            "code": "var context = $evaluation.context;\n\nvar attributes = context.attributes;\n\nif (attributes.containsValue('some-claim', 'claim-value')) {\n    $evaluation.grant();\n}"
-                        }
-                    },
-                    {
-                        "name": "Default Resource Permission",
-                        "description": "A permission that applies to the default resource",
-                        "type": "resource",
-                        "logic": "POSITIVE",
-                        "decisionStrategy": "UNANIMOUS",
-                        "config": {
-                            "resources": "[\"Default Resource\"]",
-                            "applyPolicies": "[\"Only User Policy\"]"
-                        }
-                    },
-                    {
-                        "name": "Premium Resource Permission",
-                        "type": "resource",
-                        "logic": "POSITIVE",
-                        "decisionStrategy": "UNANIMOUS",
-                        "config": {
-                            "resources": "[\"Premium Resource\"]",
-                            "applyPolicies": "[\"Only Premium User Policy\"]"
-                        }
-                    },
-                    {
-                        "name": "Admin Resource Permission",
-                        "type": "resource",
-                        "logic": "POSITIVE",
-                        "decisionStrategy": "UNANIMOUS",
-                        "config": {
-                            "resources": "[\"Admin Resource\"]",
-                            "applyPolicies": "[\"Claim-Based Policy\"]"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "clientId": "resource-photoz",
-            "secret": "secret",
-            "enabled": true,
-            "baseUrl": "http://localhost:8080",
-            "authorizationServicesEnabled" : true,
-            "adminUrl": "http://localhost:8080",
-            "redirectUris": [
-                "http://localhost:8080/*"
-            ],
-            "webOrigins" : ["http://localhost:8080"],
-            "authorizationSettings": {
-                "allowRemoteResourceManagement": false,
-                "policyEnforcementMode": "ENFORCING",
-                "resources": [
-                    {
-                        "name": "Admin Resources",
-                        "uri": "/admin/*",
+                        "name": "Photoz: Admin Resources",
+                        "uri": "/photoz/admin/*",
                         "type": "http://photoz.com/admin",
                         "scopes": [
                             {
@@ -214,8 +145,8 @@
                         ]
                     },
                     {
-                        "name": "User Profile Resource",
-                        "uri": "/profile",
+                        "name": "Photoz: User Profile Resource",
+                        "uri": "/photoz/profile",
                         "type": "http://photoz.com/profile",
                         "scopes": [
                             {
@@ -224,8 +155,8 @@
                         ]
                     },
                     {
-                        "name": "Album Resource",
-                        "uri": "/album/*",
+                        "name": "Photoz: Album Resource",
+                        "uri": "/photoz/album/*",
                         "type": "http://photoz.com/album",
                         "scopes": [
                             {
@@ -239,27 +170,85 @@
                 ],
                 "policies": [
                     {
-                        "name": "Only Owner and Administrators Policy",
+                        "name": "Alpha: Only Premium User Policy",
+                        "type": "role",
+                        "logic": "POSITIVE",
+                        "decisionStrategy": "UNANIMOUS",
+                        "config": {
+                            "roles": "[{\"id\":\"user-premium\",\"required\":false}]"
+                        }
+                    },
+                    {
+                        "name": "Alpha: Only User Policy",
+                        "type": "role",
+                        "logic": "POSITIVE",
+                        "decisionStrategy": "UNANIMOUS",
+                        "config": {
+                            "roles": "[{\"id\":\"user\",\"required\":false}]"
+                        }
+                    },
+                    {
+                        "name": "Alpha: Claim-Based Policy",
+                        "type": "js",
+                        "logic": "POSITIVE",
+                        "decisionStrategy": "UNANIMOUS",
+                        "config": {
+                            "code": "var context = $evaluation.context;\n\nvar attributes = context.attributes;\n\nif (attributes.containsValue('some-claim', 'claim-value')) {\n    $evaluation.grant();\n}"
+                        }
+                    },
+                    {
+                        "name": "Alpha: Default Resource Permission",
+                        "description": "A permission that applies to the default resource",
+                        "type": "resource",
+                        "logic": "POSITIVE",
+                        "decisionStrategy": "UNANIMOUS",
+                        "config": {
+                            "resources": "[\"Alpha: Default Resource\"]",
+                            "applyPolicies": "[\"Alpha: Only User Policy\"]"
+                        }
+                    },
+                    {
+                        "name": "Alpha: Premium Resource Permission",
+                        "type": "resource",
+                        "logic": "POSITIVE",
+                        "decisionStrategy": "UNANIMOUS",
+                        "config": {
+                            "resources": "[\"Alpha: Premium Resource\"]",
+                            "applyPolicies": "[\"Alpha: Only Premium User Policy\"]"
+                        }
+                    },
+                    {
+                        "name": "Alpha: Admin Resource Permission",
+                        "type": "resource",
+                        "logic": "POSITIVE",
+                        "decisionStrategy": "UNANIMOUS",
+                        "config": {
+                            "resources": "[\"Alpha: Admin Resource\"]",
+                            "applyPolicies": "[\"Alpha: Claim-Based Policy\"]"
+                        }
+                    },
+                    {
+                        "name": "Photoz: Only Owner and Administrators Policy",
                         "description": "Defines that only the resource owner and administrators can do something",
                         "type": "aggregate",
                         "logic": "POSITIVE",
                         "decisionStrategy": "AFFIRMATIVE",
                         "config": {
-                            "applyPolicies": "[\"Administration Policy\",\"Only Owner Policy\"]"
+                            "applyPolicies": "[\"Photoz: Administration Policy\",\"Photoz: Only Owner Policy\"]"
                         }
                     },
                     {
-                        "name": "Administration Policy",
+                        "name": "Photoz: Administration Policy",
                         "description": "Defines that only administrators from a specific network address can do something.",
                         "type": "aggregate",
                         "logic": "POSITIVE",
                         "decisionStrategy": "UNANIMOUS",
                         "config": {
-                            "applyPolicies": "[\"Any Admin Policy\",\"Only From a Specific Client Address\"]"
+                            "applyPolicies": "[\"Photoz: Any Admin Policy\",\"Photoz: Only From a Specific Client Address\"]"
                         }
                     },
                     {
-                        "name": "Only From @keycloak.org or Admin",
+                        "name": "Photoz: Only From @keycloak.org or Admin",
                         "description": "Defines that only users from @keycloak.org",
                         "type": "js",
                         "logic": "POSITIVE",
@@ -269,7 +258,7 @@
                         }
                     },
                     {
-                        "name": "Only Owner Policy",
+                        "name": "Photoz: Only Owner Policy",
                         "description": "Defines that only the resource owner is allowed to do something",
                         "type": "js",
                         "logic": "POSITIVE",
@@ -279,7 +268,7 @@
                         }
                     },
                     {
-                        "name": "Any Admin Policy",
+                        "name": "Photoz: Any Admin Policy",
                         "description": "Defines that adminsitrators can do something",
                         "type": "role",
                         "logic": "POSITIVE",
@@ -289,7 +278,7 @@
                         }
                     },
                     {
-                        "name": "Only From a Specific Client Address",
+                        "name": "Photoz: Only From a Specific Client Address",
                         "description": "Defines that only clients from a specific address can do something",
                         "type": "js",
                         "logic": "POSITIVE",
@@ -299,58 +288,58 @@
                         }
                     },
                     {
-                        "name": "Any User Policy",
+                        "name": "Photoz: Any User Policy",
                         "description": "Defines that only users from well known clients are allowed to access",
                         "type": "role",
                         "logic": "POSITIVE",
                         "decisionStrategy": "UNANIMOUS",
                         "config": {
-                            "roles": "[{\"id\":\"user\",\"required\":false},{\"id\":\"resource-photoz/manage-albums\",\"required\":true}]"
+                            "roles": "[{\"id\":\"user\",\"required\":false},{\"id\":\"photoz-resource/manage-albums\",\"required\":true}]"
                         }
                     },
                     {
-                        "name": "Admin Resource Permission",
+                        "name": "Photoz: Admin Resource Permission",
                         "description": "General policy for any administrative resource.",
                         "type": "resource",
                         "logic": "POSITIVE",
                         "decisionStrategy": "UNANIMOUS",
                         "config": {
                             "defaultResourceType": "http://photoz.com/admin",
-                            "applyPolicies": "[\"Administration Policy\"]",
+                            "applyPolicies": "[\"Photoz: Administration Policy\"]",
                             "default": "true"
                         }
                     },
                     {
-                        "name": "Album Resource Permission",
+                        "name": "Photoz: Album Resource Permission",
                         "description": "A default permission that defines access for any album resource",
                         "type": "scope",
                         "logic": "POSITIVE",
                         "decisionStrategy": "UNANIMOUS",
                         "config": {
-                            "resources": "[\"Album Resource\"]",
+                            "resources": "[\"Photoz: Album Resource\"]",
                             "scopes": "[\"album:view\",\"album:delete\"]",
-                            "applyPolicies": "[\"Only Owner and Administrators Policy\"]"
+                            "applyPolicies": "[\"Photoz: Only Owner and Administrators Policy\"]"
                         }
                     },
                     {
-                        "name": "View User Permission",
+                        "name": "Photoz: View User Permission",
                         "description": "Defines who is allowed to view an user profile",
                         "type": "scope",
                         "logic": "POSITIVE",
                         "decisionStrategy": "UNANIMOUS",
                         "config": {
                             "scopes": "[\"profile:view\"]",
-                            "applyPolicies": "[\"Only From @keycloak.org or Admin\"]"
+                            "applyPolicies": "[\"Photoz: Only From @keycloak.org or Admin\"]"
                         }
                     }
                 ]
             }
         },
         {
-            "clientId": "public-web",
+            "clientId": "web-public",
             "enabled": true,
-            "adminUrl": "http://localhost:8080",
-            "baseUrl": "http://localhost:8080",
+            "adminUrl": "http://localhost:8080/",
+            "baseUrl": "http://localhost:8080/",
             "publicClient": true,
             "consentRequired": false,
             "fullScopeAllowed": true,

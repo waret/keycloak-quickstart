@@ -16,7 +16,7 @@
  * limitations under the License.
  *
  */
-package net.waret.demo.alice.web.rest;
+package net.waret.demo.alice.web.rest.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -35,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
+@RequestMapping("/v1")
 public class ApplicationResource {
 
     private final HttpServletRequest request;
@@ -70,7 +71,11 @@ public class ApplicationResource {
     }
 
     private String createResponse() {
-        return getKeycloakSecurityContext().getToken().getPreferredUsername();
+        try {
+            return getKeycloakSecurityContext().getToken().getPreferredUsername();
+        } catch (Exception ignored) {
+        }
+        return "aa";
     }
 
     private KeycloakSecurityContext getKeycloakSecurityContext() {
