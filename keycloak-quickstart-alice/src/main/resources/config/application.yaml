@@ -2,38 +2,13 @@ server:
   connection-timeout: 5000
   port: 8080
 
-spring:
-  devtools:
-    restart:
-      enabled: true
-  datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:mem:bob;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: bob
-    password:
-    hikari:
-      auto-commit: false
-  h2:
-    console:
-      enabled: false
-  jpa:
-    database-platform: net.waret.demo.alice.domain.util.FixedH2Dialect
-    database: H2
-    show-sql: true
-    properties:
-      hibernate.id.new_generator_mappings: true
-      hibernate.connection.provider_disables_autocommit: true
-      hibernate.cache.use_second_level_cache: false
-      hibernate.cache.use_query_cache: false
-      hibernate.generate_statistics: true
-
 keycloak:
   auth-server-url: http://keycloak.waret.net/auth
   ssl-required: external
   bearer-only: true
   cors: true
-  realm: spring-boot-quickstart
-  resource: ms-confidential
+  realm: keycloak-quickstart
+  resource: resource-alice
   credentials.secret: secret
   securityConstraints:
     - authRoles:
@@ -49,32 +24,13 @@ keycloak:
           patterns:
             - /api/premium
   policy-enforcer-config:
-    enforcement-mode: "PERMISSIVE"
-    user-managed-access: {}
     lazy-load-paths: true
     paths:
-      - name: "Alpha Admin API"
+      - name: "Admin API"
         path: /alpha/api/admin
         claimInformationPointConfig:
           claims:
             some-claim: "{request.parameter['parameter-a']}"
-      - name: "Photoz Album Resource"
-        path: /photoz/album/{id}
-        methods:
-          - method: "DELETE"
-            scopes:
-              - "album:delete"
-          - method: "GET"
-            scopes:
-              - "album:view"
-      - name: "Photoz Album Resource"
-        path: /photoz/album/shares
-        enforcement-mode: "DISABLED"
-      - name: "Photoz Profile"
-        path: /photoz/profile
-      - name: "Photoz Admin Resources"
-        path: /photoz/admin/*
-
 
 logging:
   level:

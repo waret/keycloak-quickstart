@@ -17,7 +17,7 @@ spring:
     console:
       enabled: false
   jpa:
-    database-platform: net.waret.demo.alice.domain.util.FixedH2Dialect
+    database-platform: net.waret.demo.photoz.domain.util.FixedH2Dialect
     database: H2
     show-sql: true
     properties:
@@ -35,29 +35,11 @@ keycloak:
   realm: spring-boot-quickstart
   resource: ms-confidential
   credentials.secret: secret
-  securityConstraints:
-    - authRoles:
-        - user
-      securityCollections:
-        - name: protected
-          patterns:
-            - /alpha/*
-    - authRoles:
-        - user-premium
-      securityCollections:
-        - name: protected-premium
-          patterns:
-            - /api/premium
   policy-enforcer-config:
     enforcement-mode: "PERMISSIVE"
     user-managed-access: {}
     lazy-load-paths: true
     paths:
-      - name: "Alpha Admin API"
-        path: /alpha/api/admin
-        claimInformationPointConfig:
-          claims:
-            some-claim: "{request.parameter['parameter-a']}"
       - name: "Photoz Album Resource"
         path: /photoz/album/{id}
         methods:
@@ -75,7 +57,6 @@ keycloak:
       - name: "Photoz Admin Resources"
         path: /photoz/admin/*
 
-
 logging:
   level:
-    net.waret.demo.alice: debug
+    net.waret.demo.photoz: debug
