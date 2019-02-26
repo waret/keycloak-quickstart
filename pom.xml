@@ -11,7 +11,7 @@
     <description>Parent</description>
 
     <modules>
-        <module>alice</module>
-        <module>photoz</module>
+        <module>keycloak-quickstart-alice</module>
+        <module>keycloak-quickstart-photoz</module>
     </modules>
 </project>
