@@ -88,6 +88,15 @@
     "roles": {
         "realm": [
             {
+                "name": "uma_authorization"
+            },
+            {
+                "name": "admin",
+                "scopeParamRequired": false,
+                "composite": false,
+                "clientRole": false
+            },
+            {
                 "name": "user",
                 "description": "User privileges"
             },

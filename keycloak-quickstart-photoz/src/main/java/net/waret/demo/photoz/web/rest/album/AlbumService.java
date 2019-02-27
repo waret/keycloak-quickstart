@@ -30,10 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
-
 
 @Slf4j
 @RestController
@@ -180,10 +178,14 @@ public class AlbumService {
     }
 
     private static void ignoringExc(RunnableExc r) {
-        try { r.run(); } catch (Exception ignored) { }
+        try {
+            r.run();
+        } catch (Exception ignored) {
+        }
     }
 
-    @FunctionalInterface public interface RunnableExc {
+    @FunctionalInterface
+    public interface RunnableExc {
         void run() throws Exception;
     }
 }

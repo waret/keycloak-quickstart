@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/admin")
 public class AdminAlbumService {
 
     private final AlbumRepository albumRepository;
@@ -25,7 +26,7 @@ public class AdminAlbumService {
         this.albumRepository = albumRepository;
     }
 
-    @GetMapping("/admin/album")
+    @GetMapping("/album")
     public ResponseEntity<Map> findAll() {
         HashMap<String, List<Album>> albums = new HashMap<>();
 
