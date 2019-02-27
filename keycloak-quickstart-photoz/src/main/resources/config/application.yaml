@@ -31,7 +31,7 @@ keycloak:
   auth-server-url: http://keycloak.waret.net/auth
   ssl-required: external
   bearer-only: true
-#  cors: true
+  cors: true
   realm: keycloak-quickstart
   resource: resource-photoz
   credentials.secret: secret

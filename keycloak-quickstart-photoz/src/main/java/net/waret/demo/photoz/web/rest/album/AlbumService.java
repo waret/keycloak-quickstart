@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/album")
-@Transactional
+//@Transactional
 public class AlbumService {
 
     private static final String SCOPE_ALBUM_VIEW = "album:view";
@@ -86,6 +86,8 @@ public class AlbumService {
 
     @GetMapping
     public ResponseEntity<List<Album>> findAll() {
+        log.debug("request: " + request);
+        log.debug("albumRepository: " + albumRepository);
         Principal principal = request.getUserPrincipal();
         String name = principal.getName();
         return ResponseEntity.ok(albumRepository.findByUserId(name));
