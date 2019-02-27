@@ -1,0 +1,37 @@
+server:
+  connection-timeout: 5000
+  port: 8080
+
+keycloak:
+  auth-server-url: http://keycloak.waret.net/auth
+  ssl-required: external
+  bearer-only: true
+  cors: true
+  realm: keycloak-quickstart
+  resource: resource-alice
+  credentials.secret: secret
+  securityConstraints:
+    - authRoles:
+        - user
+      securityCollections:
+        - name: protected
+          patterns:
+            - /alpha/*
+    - authRoles:
+        - user-premium
+      securityCollections:
+        - name: protected-premium
+          patterns:
+            - /api/premium
+  policy-enforcer-config:
+    lazy-load-paths: true
+    paths:
+      - name: "Admin API"
+        path: /alpha/api/admin
+        claimInformationPointConfig:
+          claims:
+            some-claim: "{request.parameter['parameter-a']}"
+
+logging:
+  level:
+    net.waret.demo.alice: debug
