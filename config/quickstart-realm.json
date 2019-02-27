@@ -192,13 +192,13 @@
             "clientId": "resource-photoz",
             "secret": "secret",
             "enabled": true,
-            "baseUrl": "http://localhost:8080",
+            "baseUrl": "http://localhost:80801",
             "authorizationServicesEnabled" : true,
-            "adminUrl": "http://localhost:8080",
+            "adminUrl": "http://localhost:8081",
             "redirectUris": [
-                "http://localhost:8080/*"
+                "http://localhost:8081/*"
             ],
-            "webOrigins" : ["http://localhost:8080"],
+            "webOrigins" : ["http://localhost:8081"],
             "authorizationSettings": {
                 "allowRemoteResourceManagement": false,
                 "policyEnforcementMode": "ENFORCING",
@@ -359,7 +359,10 @@
             "redirectUris": [
                 "http://localhost:8080/*"
             ],
-            "webOrigins": ["http://localhost:8080"]
+            "webOrigins": [
+                "http://localhost:8080",
+                "http://localhost:8081"
+            ]
         }
     ]
 }

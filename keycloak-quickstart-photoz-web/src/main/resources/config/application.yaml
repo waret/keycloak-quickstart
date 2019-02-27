@@ -1,0 +1,7 @@
+server:
+  connection-timeout: 5000
+  port: 8080
+
+logging:
+  level:
+    net.waret.demo.photoz: debug

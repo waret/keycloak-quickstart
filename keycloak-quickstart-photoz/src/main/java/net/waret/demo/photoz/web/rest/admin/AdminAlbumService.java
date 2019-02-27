@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/v3")
 public class AdminAlbumService {
 
     private final AlbumRepository albumRepository;

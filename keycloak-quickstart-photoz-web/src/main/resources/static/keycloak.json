@@ -1,0 +1,7 @@
+{
+  "realm": "keycloak-quickstart",
+  "auth-server-url" : "http://keycloak.waret.net/auth",
+  "ssl-required" : "external",
+  "resource" : "public-web",
+  "public-client" : true
+}

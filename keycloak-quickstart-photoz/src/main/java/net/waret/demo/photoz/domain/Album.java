@@ -45,7 +45,7 @@ public class Album {
     private String name;
 
     @OneToMany(mappedBy = "album", fetch = FetchType.EAGER)
-    private List<Photo> photos = new ArrayList<Photo>();
+    private List<Photo> photos = new ArrayList<>();
 
     @Column(nullable = false)
     private String userId;

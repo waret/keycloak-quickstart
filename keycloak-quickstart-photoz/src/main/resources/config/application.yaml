@@ -1,6 +1,6 @@
 server:
   connection-timeout: 5000
-  port: 8080
+  port: 8081
 
 spring:
   devtools:
@@ -31,9 +31,9 @@ keycloak:
   auth-server-url: http://keycloak.waret.net/auth
   ssl-required: external
   bearer-only: true
-  cors: true
-  realm: spring-boot-quickstart
-  resource: ms-confidential
+#  cors: true
+  realm: keycloak-quickstart
+  resource: resource-photoz
   credentials.secret: secret
   policy-enforcer-config:
     enforcement-mode: "PERMISSIVE"
@@ -52,7 +52,8 @@ keycloak:
       - name: "Album Resource"
         path: /album/shares
         enforcement-mode: "DISABLED"
-      - path: /profile
+      - name: "User Profile Resource"
+        path: /profile
       - name: "Admin Resources"
         path: /admin/*
 

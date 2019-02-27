@@ -11,6 +11,7 @@ import org.keycloak.authorization.client.resource.ProtectionResource;
 import org.keycloak.representations.idm.authorization.PermissionTicketRepresentation;
 import org.keycloak.representations.idm.authorization.ResourceRepresentation;
 import org.keycloak.representations.idm.authorization.ScopeRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -36,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/v3/album")
+@RequestMapping("/album")
 @Transactional
 public class AlbumService {
 
@@ -47,6 +48,7 @@ public class AlbumService {
 
     private final AlbumRepository albumRepository;
 
+    @Autowired
     public AlbumService(HttpServletRequest request,
             AlbumRepository albumRepository) {
         this.request = request;
@@ -84,7 +86,9 @@ public class AlbumService {
 
     @GetMapping
     public ResponseEntity<List<Album>> findAll() {
-        return ResponseEntity.ok(albumRepository.findByUserId(request.getUserPrincipal().getName()));
+        Principal principal = request.getUserPrincipal();
+        String name = principal.getName();
+        return ResponseEntity.ok(albumRepository.findByUserId(name));
     }
 
     @GetMapping("/shares")
@@ -159,6 +163,25 @@ public class AlbumService {
     }
 
     private KeycloakSecurityContext getKeycloakSecurityContext() {
-        return (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
+        KeycloakSecurityContext keycloakSecurityContext = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
+        ignoringExc(() -> {
+            log.debug("keycloakSecurityContext.getToken(): {}", keycloakSecurityContext.getToken());
+            log.debug("keycloakSecurityContext.getTokenString(): {}", keycloakSecurityContext.getTokenString());
+            log.debug("keycloakSecurityContext.getIdToken(): {}", keycloakSecurityContext.getIdToken());
+            log.debug("keycloakSecurityContext.getIdTokenString(): {}", keycloakSecurityContext.getIdTokenString());
+            log.debug("keycloakSecurityContext.getAuthorizationContext().getPermissions(): {}", keycloakSecurityContext.getAuthorizationContext().getPermissions());
+            log.debug("keycloakSecurityContext.getRealm(): {}", keycloakSecurityContext.getRealm());
+            log.debug("keycloakSecurityContext.getToken().getPreferredUsername(): {}", keycloakSecurityContext.getToken().getPreferredUsername());
+        });
+        return keycloakSecurityContext;
+//        return (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
+    }
+
+    private static void ignoringExc(RunnableExc r) {
+        try { r.run(); } catch (Exception ignored) { }
+    }
+
+    @FunctionalInterface public interface RunnableExc {
+        void run() throws Exception;
     }
 }
