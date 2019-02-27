@@ -349,6 +349,8 @@
         {
             "clientId": "public-web",
             "enabled": true,
+            "implicitFlowEnabled": true,
+            "directAccessGrantsEnabled": true,
             "adminUrl": "http://localhost:8080",
             "baseUrl": "http://localhost:8080",
             "publicClient": true,

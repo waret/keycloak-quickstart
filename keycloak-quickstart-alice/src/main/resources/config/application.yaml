@@ -1,3 +1,4 @@
+
 server:
   connection-timeout: 5000
   port: 8080
@@ -16,7 +17,7 @@ keycloak:
       securityCollections:
         - name: protected
           patterns:
-            - /alpha/*
+            - /*
     - authRoles:
         - user-premium
       securityCollections:
@@ -24,10 +25,12 @@ keycloak:
           patterns:
             - /api/premium
   policy-enforcer-config:
+    enforcement-mode: "PERMISSIVE"
+    user-managed-access: {}
     lazy-load-paths: true
     paths:
-      - name: "Admin API"
-        path: /alpha/api/admin
+      - path: /api/admin          # 通过 path 查找 Keycloak 服务器中定义的资源
+        name: "Admin Resource"    # 通过 name 查找 Keycloak 服务器中定义的资源
         claimInformationPointConfig:
           claims:
             some-claim: "{request.parameter['parameter-a']}"

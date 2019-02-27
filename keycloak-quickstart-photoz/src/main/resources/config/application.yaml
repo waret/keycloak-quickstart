@@ -40,8 +40,8 @@ keycloak:
     user-managed-access: {}
     lazy-load-paths: true
     paths:
-      - name: "Photoz Album Resource"
-        path: /photoz/album/{id}
+      - name: "Album Resource"
+        path: /album/{id}
         methods:
           - method: "DELETE"
             scopes:
@@ -49,13 +49,12 @@ keycloak:
           - method: "GET"
             scopes:
               - "album:view"
-      - name: "Photoz Album Resource"
-        path: /photoz/album/shares
+      - name: "Album Resource"
+        path: /album/shares
         enforcement-mode: "DISABLED"
-      - name: "Photoz Profile"
-        path: /photoz/profile
-      - name: "Photoz Admin Resources"
-        path: /photoz/admin/*
+      - path: /profile
+      - name: "Admin Resources"
+        path: /admin/*
 
 logging:
   level:
