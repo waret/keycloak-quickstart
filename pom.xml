@@ -11,8 +11,8 @@
     <description>Parent</description>
 
     <modules>
-        <module>keycloak-quickstart-alice</module>
-        <module>keycloak-quickstart-bravo</module>
+        <!--<module>keycloak-quickstart-alice</module>-->
+        <!--<module>keycloak-quickstart-bravo</module>-->
         <module>keycloak-quickstart-photoz</module>
         <module>keycloak-quickstart-photoz-web</module>
     </modules>

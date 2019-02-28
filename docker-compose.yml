@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  nginx:
+    image: nginx:1.15.8-alpine
+    ports:
+    - "8080:80"
+    volumes:
+    - ./nginx/conf.d:/etc/nginx/conf.d
+    - ./nginx/html:/usr/share/nginx/html

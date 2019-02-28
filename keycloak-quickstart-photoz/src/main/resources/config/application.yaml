@@ -17,7 +17,6 @@ spring:
     console:
       enabled: false
   jpa:
-    database-platform: net.waret.demo.photoz.domain.util.FixedH2Dialect
     database: H2
     show-sql: true
     properties:
@@ -28,20 +27,27 @@ spring:
       hibernate.generate_statistics: true
 
 keycloak:
-  auth-server-url: http://keycloak.waret.net/auth
+  auth-server-url: http://localhost:8180/auth
+#  auth-server-url: http://keycloak.waret.net/auth
   ssl-required: external
   bearer-only: true
   cors: true
-  realm: keycloak-quickstart
-  resource: resource-photoz
+  realm: photoz
+#  realm: keycloak-quickstart
+  resource: photoz-restful-api
+#  resource: resource-photoz
   credentials.secret: secret
-  securityConstraints:
-    - authRoles:
-        - user
-      securityCollections:
-        - name: protected
-          patterns:
-            - /*
+#  verify-token-audience: true
+#  use-resource-role-mappings: true
+#  confidential-port: 0
+#  securityConstraints: {}
+#  securityConstraints:
+#    - authRoles:
+#        - "*"
+#      securityCollections:
+#        - patterns:
+#            - /*
+#  policy-enforcer-config: {}
   policy-enforcer-config:
     enforcement-mode: "PERMISSIVE"
     user-managed-access: {}
@@ -67,3 +73,4 @@ keycloak:
 logging:
   level:
     net.waret.demo.photoz: debug
+    org.keycloak: debug
