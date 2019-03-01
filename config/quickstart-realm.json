@@ -119,7 +119,7 @@
             ],
             "webOrigins" : ["http://localhost:8080"],
             "authorizationSettings": {
-                "allowRemoteResourceManagement": false,
+                "allowRemoteResourceManagement": true,
                 "policyEnforcementMode": "ENFORCING",
                 "resources": [
                     {
@@ -207,7 +207,7 @@
             ],
             "webOrigins" : ["*"],
             "authorizationSettings": {
-                "allowRemoteResourceManagement": false,
+                "allowRemoteResourceManagement": true,
                 "policyEnforcementMode": "ENFORCING",
                 "resources": [
                     {

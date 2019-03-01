@@ -32,10 +32,10 @@ keycloak:
   ssl-required: external
   bearer-only: true
   cors: true
-  realm: photoz
-#  realm: keycloak-quickstart
-  resource: photoz-restful-api
-#  resource: resource-photoz
+#  realm: photoz
+  realm: keycloak-quickstart
+#  resource: photoz-restful-api
+  resource: resource-photoz
   credentials.secret: secret
 #  verify-token-audience: true
 #  use-resource-role-mappings: true
