@@ -38,7 +38,7 @@ services:
       TZ:                        "Asia/Shanghai"
 
   nginx:
-      #image: nginx:1.15.8-alpine
+    #image: nginx:1.15.8-alpine
     image: firesh/nginx-lua
     depends_on:
     - keycloak
@@ -46,7 +46,7 @@ services:
     - deepmesh-net
     ports:
     - "8180:8180"
-    - "8080:8080"
+    #- "8080:8080"
     volumes:
     - ./nginx/conf.d:/etc/nginx/conf.d
     - ./nginx/html:/usr/share/nginx/html
