@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -54,7 +55,7 @@ public class AlbumService {
     }
 
     @PostMapping()
-    public ResponseEntity create(Album newAlbum) {
+    public ResponseEntity create(@RequestBody Album newAlbum) {
         Principal userPrincipal = request.getUserPrincipal();
         newAlbum.setUserId(userPrincipal.getName());
 
@@ -66,6 +67,7 @@ public class AlbumService {
             newAlbum = albumRepository.save(newAlbum);
             log.debug("New Album: " + newAlbum);
             createProtectedResource(newAlbum);
+            albumRepository.save(newAlbum);
         } catch (Exception e) {
             getAuthzClient().protection().resource().delete(newAlbum.getExternalId());
         }

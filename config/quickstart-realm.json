@@ -201,13 +201,11 @@
             "clientId": "resource-photoz",
             "secret": "secret",
             "enabled": true,
-            "baseUrl": "http://localhost:80801",
             "authorizationServicesEnabled" : true,
-            "adminUrl": "http://localhost:8081",
             "redirectUris": [
-                "http://localhost:8081/*"
+                "http://localhost:8080/*"
             ],
-            "webOrigins" : ["http://localhost:8081"],
+            "webOrigins" : ["*"],
             "authorizationSettings": {
                 "allowRemoteResourceManagement": false,
                 "policyEnforcementMode": "ENFORCING",
@@ -338,7 +336,7 @@
                         "config": {
                             "resources": "[\"Album Resource\"]",
                             "scopes": "[\"album:view\",\"album:delete\"]",
-                            "applyPolicies": "[\"Only Owner and Administrators Policy\"]"
+                            "applyPolicies": "[\"Any User Policy\"]"
                         }
                     },
                     {
@@ -360,8 +358,6 @@
             "enabled": true,
             "implicitFlowEnabled": true,
             "directAccessGrantsEnabled": true,
-            "adminUrl": "http://localhost:8080",
-            "baseUrl": "http://localhost:8080",
             "publicClient": true,
             "consentRequired": false,
             "fullScopeAllowed": true,
@@ -369,8 +365,7 @@
                 "http://localhost:8080/*"
             ],
             "webOrigins": [
-                "http://localhost:8080",
-                "http://localhost:8081"
+                "*"
             ]
         }
     ]

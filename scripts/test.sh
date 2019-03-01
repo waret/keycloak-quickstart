@@ -1,15 +1,20 @@
 #!/bin/bash
 
-keycloak_url=http://keycloak.waret.net
-realm=keycloak-quickstart
+keycloak_url=http://localhost:8180
+realm=photoz
+#realm=keycloak-quickstart
 access_type=public
-client_id=public-web
+client_id=photoz-html5-client
+#client_id=public-web
 client_secret=secret
 username=alice
 password=alice
-res_client=resource-alice
-api_host=http://localhost:8080
-api=/api/resourcea
+res_client=photoz-restful-api
+#res_client=resource-alice
+api_host=http://localhost:8081
+#api_host=http://localhost:8080
+api=/album
+#api=/api/resourcea
 rpt=false
 
 function get_token_keycloak_realm_access_client_user() {
@@ -69,20 +74,22 @@ function api_rpt() {
     http --timeout=300 $api_host$api Authorization:" Bearer $(get_rpt_token_keycloak_realm_access_client_user)" $@
 }
 
-while [[ $# > 0 ]]; do
-    if [[ $1 != "--" ]]; then
-        eval $1
-        if echo $1 | grep -q username; then
-            password=$username
+if [[ $# > 0 ]]; then
+    while [[ $# > 0 ]]; do
+        if [[ $1 != "--" ]]; then
+            eval $1
+            if echo $1 | grep -q username; then
+                password=$username
+            fi
+            shift
+        else
+            break
         fi
-        shift
+    done
+    
+    if $rpt; then
+        api_rpt $@
     else
-        break
+        api $@
     fi
-done
-
-if $rpt; then
-    api_rpt $@
-else
-    api $@
 fi

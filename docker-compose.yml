@@ -1,10 +1,52 @@
 version: '3.4'
 
+networks: 
+  deepmesh-net:
+
+volumes:
+  keycloak-datastore:
+
 services:
+
+  keycloak-db:
+    image: postgres:9.6
+    volumes: 
+    - keycloak-datastore:/var/lib/postgresql/data
+    networks:
+    - deepmesh-net
+    environment:
+      POSTGRES_USER:     "keycloak"
+      POSTGRES_DB:       "keycloak"
+      POSTGRES_PASSWORD: "keycloak"
+
+  keycloak:
+    image: jboss/keycloak:4.8.3.Final
+    depends_on:
+    - keycloak-db
+    networks:
+    - deepmesh-net
+    environment:
+      DB_VENDOR:                 "POSTGRES"
+      DB_ADDR:                   "keycloak-db"
+      DB_PORT:                   5432
+      DB_DATABASE:               "keycloak"
+      DB_USER:                   "keycloak"
+      DB_PASSWORD:               "keycloak"
+      KEYCLOAK_USER:             "admin"
+      KEYCLOAK_PASSWORD:         "admin"
+      PROXY_ADDRESS_FORWARDING:  "true"
+      TZ:                        "Asia/Shanghai"
+
   nginx:
-    image: nginx:1.15.8-alpine
+      #image: nginx:1.15.8-alpine
+    image: firesh/nginx-lua
+    depends_on:
+    - keycloak
+    networks:
+    - deepmesh-net
     ports:
-    - "8080:80"
+    - "8180:8180"
+    - "8080:8080"
     volumes:
     - ./nginx/conf.d:/etc/nginx/conf.d
     - ./nginx/html:/usr/share/nginx/html
