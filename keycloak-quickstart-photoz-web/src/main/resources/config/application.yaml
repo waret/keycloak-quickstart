@@ -1,6 +1,8 @@
 server:
   connection-timeout: 5000
-  port: 8082
+  port: 8080
+
+#spring.mvc.servlet.path:
 
 logging:
   level:
