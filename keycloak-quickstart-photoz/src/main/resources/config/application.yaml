@@ -41,34 +41,28 @@ keycloak:
 #  use-resource-role-mappings: true
 #  confidential-port: 0
 #  securityConstraints: {}
-#  securityConstraints:
-#    - authRoles:
-#        - "*"
-#      securityCollections:
-#        - patterns:
-#            - /*
 #  policy-enforcer-config: {}
   policy-enforcer-config:
     enforcement-mode: "PERMISSIVE"
     user-managed-access: {}
     lazy-load-paths: true
-    paths:
-      - name: "Album Resource"
-        path: /album/{id}
-        methods:
-          - method: "DELETE"
-            scopes:
-              - "album:delete"
-          - method: "GET"
-            scopes:
-              - "album:view"
-      - name: "Album Resource"
-        path: /album/shares
-        enforcement-mode: "DISABLED"
-      - name: "User Profile Resource"
-        path: /profile
-      - name: "Admin Resources"
-        path: /admin/*
+#    paths:
+#      - name: "Album Resource"
+#        path: /album/{id}
+#        methods:
+#          - method: "DELETE"
+#            scopes:
+#              - "album:delete"
+#          - method: "GET"
+#            scopes:
+#              - "album:view"
+#      - name: "Album Resource"
+#        path: /album/shares
+#        enforcement-mode: "DISABLED"
+#      - name: "User Profile Resource"
+#        path: /profile
+#      - name: "Admin Resources"
+#        path: /admin/*
 
 logging:
   level:
