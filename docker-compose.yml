@@ -1,7 +1,10 @@
 version: '3.4'
 
 networks: 
-  deepmesh-net:
+  keycloak-quickstart:
+    ipam:
+      config:
+        - subnet: 172.23.0.1/24
 
 volumes:
   keycloak-datastore:
@@ -13,7 +16,7 @@ services:
     volumes: 
     - keycloak-datastore:/var/lib/postgresql/data
     networks:
-    - deepmesh-net
+    - keycloak-quickstart
     environment:
       POSTGRES_USER:     "keycloak"
       POSTGRES_DB:       "keycloak"
@@ -24,7 +27,7 @@ services:
     depends_on:
     - keycloak-db
     networks:
-    - deepmesh-net
+    - keycloak-quickstart
     environment:
       DB_VENDOR:                 "POSTGRES"
       DB_ADDR:                   "keycloak-db"
@@ -38,12 +41,11 @@ services:
       TZ:                        "Asia/Shanghai"
 
   nginx:
-    #image: nginx:1.15.8-alpine
-    image: firesh/nginx-lua
+    image: openresty/openresty:1.13.6.2-2-alpine
     depends_on:
     - keycloak
     networks:
-    - deepmesh-net
+    - keycloak-quickstart
     ports:
     - "8180:8180"
     #- "8080:8080"
