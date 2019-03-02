@@ -165,18 +165,7 @@ public class AlbumService {
     }
 
     private KeycloakSecurityContext getKeycloakSecurityContext() {
-        KeycloakSecurityContext keycloakSecurityContext = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
-        ignoringExc(() -> {
-            log.debug("keycloakSecurityContext.getToken(): {}", keycloakSecurityContext.getToken());
-            log.debug("keycloakSecurityContext.getTokenString(): {}", keycloakSecurityContext.getTokenString());
-            log.debug("keycloakSecurityContext.getIdToken(): {}", keycloakSecurityContext.getIdToken());
-            log.debug("keycloakSecurityContext.getIdTokenString(): {}", keycloakSecurityContext.getIdTokenString());
-            log.debug("keycloakSecurityContext.getAuthorizationContext().getPermissions(): {}", keycloakSecurityContext.getAuthorizationContext().getPermissions());
-            log.debug("keycloakSecurityContext.getRealm(): {}", keycloakSecurityContext.getRealm());
-            log.debug("keycloakSecurityContext.getToken().getPreferredUsername(): {}", keycloakSecurityContext.getToken().getPreferredUsername());
-        });
-        return keycloakSecurityContext;
-//        return (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
+        return (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
     }
 
     private static void ignoringExc(RunnableExc r) {

@@ -4,7 +4,7 @@ server:
   port: 8080
 
 keycloak:
-  auth-server-url: http://keycloak.waret.net/auth
+  auth-server-url: http://localhost:8180/auth
   ssl-required: external
   bearer-only: true
   cors: true
@@ -25,7 +25,7 @@ keycloak:
           patterns:
             - /api/premium
   policy-enforcer-config:
-    enforcement-mode: "Enforcing"
+    enforcement-mode: "PERMISSIVE"
     user-managed-access: {}
     lazy-load-paths: true
     paths:
@@ -37,4 +37,4 @@ keycloak:
 
 logging:
   level:
-    net.waret.demo.alice: debug
+    net.waret.demo.charlie: debug

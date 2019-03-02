@@ -1,20 +1,15 @@
 #!/bin/bash
 
 keycloak_url=http://localhost:8180
-realm=photoz
-#realm=keycloak-quickstart
+realm=keycloak-quickstart
 access_type=public
-client_id=photoz-html5-client
-#client_id=public-web
+client_id=public-web
 client_secret=secret
 username=alice
 password=alice
-res_client=photoz-restful-api
-#res_client=resource-alice
-api_host=http://localhost:8081
-#api_host=http://localhost:8080
-api=/album
-#api=/api/resourcea
+res_client=resource-alice
+api_host=http://localhost:8080
+api=/api/resourcea
 rpt=false
 
 function get_token_keycloak_realm_access_client_user() {
@@ -83,6 +78,7 @@ if [[ $# > 0 ]]; then
             fi
             shift
         else
+            shift
             break
         fi
     done
