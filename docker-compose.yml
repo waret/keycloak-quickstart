@@ -48,7 +48,7 @@ services:
     - keycloak-quickstart
     ports:
     - "8180:8180"
-    #- "8080:8080"
+    - "8080:8080"
     volumes:
     - ./nginx/conf.d:/etc/nginx/conf.d
     - ./nginx/html:/usr/share/nginx/html

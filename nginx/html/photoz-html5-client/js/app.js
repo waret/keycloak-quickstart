@@ -82,7 +82,7 @@ module.controller('TokenCtrl', function ($scope, Identity) {
     }
 
     $scope.requestEntitlements = function () {
-        Identity.authorization.entitlement('photoz-restful-api').then(function (rpt) {
+        Identity.authorization.entitlement('resource-photoz').then(function (rpt) {
             $scope.showRpt()
         });
     }

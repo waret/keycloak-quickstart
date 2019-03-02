@@ -1,7 +1,7 @@
 {
-  "realm": "photoz",
+  "realm": "keycloak-quickstart",
   "auth-server-url" : "http://localhost:8180/auth",
   "ssl-required" : "external",
-  "resource" : "photoz-html5-client",
+  "resource" : "public-web",
   "public-client" : true
 }
