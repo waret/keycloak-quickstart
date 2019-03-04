@@ -69,7 +69,7 @@ public class AlbumService {
             createProtectedResource(newAlbum);
             albumRepository.save(newAlbum);
         } catch (Exception e) {
-            log.error("aa", e);
+            log.error("Create Album Exception", e);
             getAuthzClient().protection().resource().delete(newAlbum.getExternalId());
         }
 
