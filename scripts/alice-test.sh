@@ -14,10 +14,9 @@ rpt=false
 
 function get_token_keycloak_realm_access_client_user() {
     if [[ $access_type == "public" ]]; then
-        http --form POST \
+        http --form \
             ${keycloak_url}/auth/realms/${realm}/protocol/openid-connect/token \
             Accept:application/json \
-            Content-Type:application/x-www-form-urlencoded \
             client_id=${client_id} \
             username=${username} \
             password=${password} \
@@ -25,10 +24,9 @@ function get_token_keycloak_realm_access_client_user() {
             response_type='id_token token' \
             scope='openid profile email' | jq --raw-output '.access_token'
     elif [[ $access_type == "confidential" ]]; then
-        http --form POST \
+        http --form \
             ${keycloak_url}/auth/realms/${realm}/protocol/openid-connect/token \
             Accept:application/json \
-            Content-Type:application/x-www-form-urlencoded \
             Authorization:" Basic $(printf "${client_id}:${client_secret}" | base64)" \
             username=${username} \
             password=${password} \
@@ -36,10 +34,9 @@ function get_token_keycloak_realm_access_client_user() {
             response_type='id_token token' \
             scope='openid profile email' | jq --raw-output '.access_token'
     else
-            http --form POST \
+            http --form \
                 ${keycloak_url}/auth/realms/${realm}/protocol/openid-connect/token \
                 Accept:application/json \
-                Content-Type:application/x-www-form-urlencoded \
                 client_id=${client_id} \
                 client_secret=${client_secret} \
                 username=${username} \
@@ -51,10 +48,9 @@ function get_token_keycloak_realm_access_client_user() {
 }
 
 function get_rpt_token_keycloak_realm_access_client_user() {
-    http --form POST \
+    http --form \
         ${keycloak_url}/auth/realms/${realm}/protocol/openid-connect/token \
         Accept:application/json \
-        Content-Type:application/x-www-form-urlencoded \
         Authorization:" Bearer $(get_token_keycloak_realm_access_client_user)" \
         grant_type=urn:ietf:params:oauth:grant-type:uma-ticket \
         audience=$res_client | jq --raw-output '.access_token'

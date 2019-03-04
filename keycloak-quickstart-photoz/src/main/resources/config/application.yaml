@@ -8,7 +8,8 @@ spring:
       enabled: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:mem:bob;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#    url: jdbc:h2:mem:keycloak-quickstart-photoz;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:file:./data/keycloak-quickstart-photoz;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: bob
     password:
     hikari:
@@ -28,13 +29,10 @@ spring:
 
 keycloak:
   auth-server-url: http://localhost:8180/auth
-#  auth-server-url: http://keycloak.waret.net/auth
   ssl-required: external
   bearer-only: true
   cors: true
-#  realm: photoz
   realm: keycloak-quickstart
-#  resource: photoz-restful-api
   resource: resource-photoz
   credentials.secret: secret
 #  verify-token-audience: true
@@ -46,23 +44,23 @@ keycloak:
     enforcement-mode: "PERMISSIVE"
     user-managed-access: {}
     lazy-load-paths: true
-#    paths:
-#      - name: "Album Resource"
-#        path: /album/{id}
-#        methods:
-#          - method: "DELETE"
-#            scopes:
-#              - "album:delete"
-#          - method: "GET"
-#            scopes:
-#              - "album:view"
-#      - name: "Album Resource"
-#        path: /album/shares
-#        enforcement-mode: "DISABLED"
-#      - name: "User Profile Resource"
-#        path: /profile
-#      - name: "Admin Resources"
-#        path: /admin/*
+    paths:
+      - name: "Album Resource"
+        path: /album/{id}
+        methods:
+          - method: "DELETE"
+            scopes:
+              - "album:delete"
+          - method: "GET"
+            scopes:
+              - "album:view"
+      - name: "Album Resource"
+        path: /album/shares
+        enforcement-mode: "DISABLED"
+      - name: "User Profile Resource"
+        path: /profile
+      - name: "Admin Resources"
+        path: /admin/*
 
 logging:
   level:
