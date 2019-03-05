@@ -2,7 +2,8 @@ package net.waret.demo.photoz.web.rest.album;
 
 import net.waret.demo.photoz.domain.Album;
 import net.waret.demo.photoz.repository.AlbumRepository;
-import net.waret.demo.photoz.web.dto.SharedAlbum;
+import net.waret.demo.photoz.service.dto.SharedAlbum;
+import net.waret.demo.photoz.utils.OffsetBasedPageRequest;
 
 import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.authorization.client.AuthzClient;
@@ -12,6 +13,9 @@ import org.keycloak.representations.idm.authorization.PermissionTicketRepresenta
 import org.keycloak.representations.idm.authorization.ResourceRepresentation;
 import org.keycloak.representations.idm.authorization.ScopeRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -29,6 +34,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/album")
 //@Transactional
-public class AlbumService {
+public class AlbumResource {
 
     private static final String SCOPE_ALBUM_VIEW = "album:view";
     private static final String SCOPE_ALBUM_DELETE = "album:delete";
@@ -48,7 +54,7 @@ public class AlbumService {
     private final AlbumRepository albumRepository;
 
     @Autowired
-    public AlbumService(HttpServletRequest request,
+    public AlbumResource(HttpServletRequest request,
             AlbumRepository albumRepository) {
         this.request = request;
         this.albumRepository = albumRepository;
@@ -86,12 +92,22 @@ public class AlbumService {
     }
 
     @GetMapping
-    public ResponseEntity<List<Album>> findAll() {
+    public ResponseEntity<List<Album>> findAll(
+            @RequestParam(value = "offset", required = false) Long offset,
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
         log.debug("request: " + request);
         log.debug("albumRepository: " + albumRepository);
         Principal principal = request.getUserPrincipal();
         String name = principal.getName();
-        return ResponseEntity.ok(albumRepository.findByUserId(name));
+        Pageable pr;
+        if (offset != null && limit != null) {
+            pr = new OffsetBasedPageRequest(offset, limit, Sort.Direction.ASC, "name");
+        } else {
+            pr = PageRequest.of(page, size, Sort.Direction.ASC, "name");
+        }
+        return ResponseEntity.ok(albumRepository.findByUserId(name, pr).get().collect(Collectors.toList()));
     }
 
     @GetMapping("/shares")
@@ -167,17 +183,5 @@ public class AlbumService {
 
     private KeycloakSecurityContext getKeycloakSecurityContext() {
         return (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
-    }
-
-    private static void ignoringExc(RunnableExc r) {
-        try {
-            r.run();
-        } catch (Exception ignored) {
-        }
-    }
-
-    @FunctionalInterface
-    public interface RunnableExc {
-        void run() throws Exception;
     }
 }

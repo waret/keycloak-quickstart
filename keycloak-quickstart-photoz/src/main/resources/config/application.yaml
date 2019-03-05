@@ -41,12 +41,12 @@ keycloak:
 #  securityConstraints: {}
 #  policy-enforcer-config: {}
   policy-enforcer-config:
-    enforcement-mode: "PERMISSIVE"
+    enforcement-mode: "Enforcing"
+#    enforcement-mode: "PERMISSIVE"
     user-managed-access: {}
-    lazy-load-paths: true
+    lazy-load-paths: false
     paths:
-      - name: "Album Resource"
-        path: /album/{id}
+      - path: /album/{id}
         methods:
           - method: "DELETE"
             scopes:
@@ -54,13 +54,21 @@ keycloak:
           - method: "GET"
             scopes:
               - "album:view"
-      - name: "Album Resource"
-        path: /album/shares
+      - path: /album/shares
         enforcement-mode: "DISABLED"
-      - name: "User Profile Resource"
-        path: /profile
-      - name: "Admin Resources"
-        path: /admin/*
+      - path: /album
+        methods:
+          - method: "POST"
+            scopes:
+              - "album:create"
+          - method: "GET"
+            scopes:
+              - "album:view"
+      - path: /profile
+      - path: /admin/*
+      - path: /test-client-ip
+      - path: /api/v1/*
+        enforcement-mode: "DISABLED"
 
 logging:
   level:

@@ -30,9 +30,9 @@ public class AdminAlbumService {
     public ResponseEntity<Map> findAll() {
         HashMap<String, List<Album>> albums = new HashMap<>();
 
-        List<Album> result = albumRepository.findAll();
+        Iterable<Album> iterable = albumRepository.findAll();
 
-        for (Album album : result) {
+        for (Album album : iterable) {
             albums.computeIfAbsent(album.getUserId(), k -> new ArrayList<>()).add(album);
         }
 

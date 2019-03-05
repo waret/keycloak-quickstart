@@ -54,6 +54,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-undertow</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-hateoas</artifactId>
+		</dependency>
 
 		<!-- Keycloak  -->
         <dependency>
@@ -72,12 +76,21 @@
 
 		<!-- Libs -->
 		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.atteo</groupId>
+			<artifactId>evo-inflector</artifactId>
+			<version>1.2.2</version>
 		</dependency>
 
         <!-- Test -->

@@ -1,4 +1,4 @@
-package net.waret.demo.photoz.web.dto;
+package net.waret.demo.photoz.service.dto;
 
 public class Profile {
     private String userName;

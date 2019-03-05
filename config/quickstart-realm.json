@@ -256,6 +256,16 @@
                         }
                     },
                     {
+                        "name": "Only Owner and Any Admin Policy",
+                        "description": "Defines that only the resource owner and administrators can do something",
+                        "type": "aggregate",
+                        "logic": "POSITIVE",
+                        "decisionStrategy": "AFFIRMATIVE",
+                        "config": {
+                            "applyPolicies": "[\"Any Admin Policy\",\"Only Owner Policy\"]"
+                        }
+                    },
+                    {
                         "name": "Administration Policy",
                         "description": "Defines that only administrators from a specific network address can do something.",
                         "type": "aggregate",
@@ -330,12 +340,11 @@
                     {
                         "name": "Album Resource Permission",
                         "description": "A default permission that defines access for any album resource",
-                        "type": "scope",
+                        "type": "resource",
                         "logic": "POSITIVE",
                         "decisionStrategy": "UNANIMOUS",
                         "config": {
                             "resources": "[\"Album Resource\"]",
-                            "scopes": "[\"album:view\",\"album:delete\"]",
                             "applyPolicies": "[\"Any User Policy\"]"
                         }
                     },

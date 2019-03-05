@@ -18,7 +18,7 @@
 package net.waret.demo.photoz.web.rest.album;
 
 import net.waret.demo.photoz.repository.AlbumRepository;
-import net.waret.demo.photoz.web.dto.Profile;
+import net.waret.demo.photoz.service.dto.Profile;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/profile")
-public class ProfileService {
+public class ProfileResource {
 
     private final HttpServletRequest request;
 
@@ -39,7 +39,7 @@ public class ProfileService {
 
     private static final String PROFILE_VIEW = "urn:photoz.com:scopes:profile:view";
 
-    public ProfileService(HttpServletRequest request,
+    public ProfileResource(HttpServletRequest request,
             AlbumRepository albumRepository) {
         this.request = request;
         this.albumRepository = albumRepository;
