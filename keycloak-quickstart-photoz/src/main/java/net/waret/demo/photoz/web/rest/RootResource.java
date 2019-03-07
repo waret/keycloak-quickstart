@@ -15,6 +15,10 @@
  */
 package net.waret.demo.photoz.web.rest;
 
+import net.waret.demo.photoz.web.rest.employee.EmployeeResource;
+import net.waret.demo.photoz.web.rest.employee.ManagerResource;
+import net.waret.demo.photoz.web.rest.employee.OrderResource;
+
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,14 +31,18 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
  * @author Greg Turnquist
  */
 @RestController
-class RootController {
+public class RootResource {
 
 	@GetMapping("/api/v1")
     public ResponseEntity<ResourceSupport> root() {
 
 		ResourceSupport resourceSupport = new ResourceSupport();
 
-		resourceSupport.add(linkTo(methodOn(RootController.class).root()).withSelfRel());
+		resourceSupport.add(linkTo(methodOn(RootResource.class).root()).withSelfRel());
+		resourceSupport.add(linkTo(methodOn(EmployeeResource.class).all()).withRel("employees"));
+		resourceSupport.add(linkTo(methodOn(EmployeeResource.class).findAllDetailedEmployees()).withRel("detailedEmployees"));
+		resourceSupport.add(linkTo(methodOn(ManagerResource.class).findAll()).withRel("managers"));
+		resourceSupport.add(linkTo(methodOn(OrderResource.class).all()).withRel("orders"));
 
 		return ResponseEntity.ok(resourceSupport);
 	}

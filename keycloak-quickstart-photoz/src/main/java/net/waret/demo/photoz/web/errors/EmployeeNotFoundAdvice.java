@@ -16,4 +16,11 @@ class EmployeeNotFoundAdvice {
         return ex.getMessage();
     }
 
+    @ResponseBody
+    @ExceptionHandler(OrderNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String orderNotFoundHandler(OrderNotFoundException ex) {
+        return ex.getMessage();
+    }
+
 }
