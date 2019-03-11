@@ -13,11 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.waret.demo.photoz.web.rest;
-
-import net.waret.demo.photoz.web.rest.employee.EmployeeResource;
-import net.waret.demo.photoz.web.rest.employee.ManagerResource;
-import net.waret.demo.photoz.web.rest.employee.OrderResource;
+package net.waret.demo.photoz.web.rest.employee;
 
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
 server:
   connection-timeout: 5000
-  port: 8081
+  port: 8082
 
 spring:
   devtools:
@@ -38,8 +38,12 @@ keycloak:
 #  verify-token-audience: true
 #  use-resource-role-mappings: true
 #  confidential-port: 0
-#  securityConstraints: {}
-#  policy-enforcer-config: {}
+  securityConstraints:
+    - authRoles:
+        - "**"
+      securityCollections:
+        - patterns:
+            - "/*"
   policy-enforcer-config:
     enforcement-mode: "Enforcing"
 #    enforcement-mode: "PERMISSIVE"
@@ -65,6 +69,8 @@ keycloak:
             scopes:
               - "album:view"
       - path: /profile
+      - path: /error
+        enforcement-mode: "DISABLED"
       - path: /admin/*
       - path: /test-client-ip
       - path: /api/v1/*
@@ -73,4 +79,4 @@ keycloak:
 logging:
   level:
     net.waret.demo.photoz: debug
-    org.keycloak: debug
+    org.keycloak: trace

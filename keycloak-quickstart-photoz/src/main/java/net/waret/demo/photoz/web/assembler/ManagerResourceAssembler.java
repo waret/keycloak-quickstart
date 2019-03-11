@@ -1,7 +1,7 @@
 package net.waret.demo.photoz.web.assembler;
 
 import net.waret.demo.photoz.domain.Manager;
-import net.waret.demo.photoz.web.rest.RootResource;
+import net.waret.demo.photoz.web.rest.employee.RootResource;
 import net.waret.demo.photoz.web.rest.employee.EmployeeResource;
 import net.waret.demo.photoz.web.rest.employee.ManagerResource;
 
