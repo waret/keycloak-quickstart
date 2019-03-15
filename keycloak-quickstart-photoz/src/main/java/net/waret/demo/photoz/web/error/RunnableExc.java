@@ -1,4 +1,4 @@
-package net.waret.demo.photoz.web.errors;
+package net.waret.demo.photoz.web.error;
 
 @FunctionalInterface
 public interface RunnableExc {

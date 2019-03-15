@@ -1,0 +1,31 @@
+server:
+  connection-timeout: 5000
+  port: 8082
+
+spring:
+  devtools:
+    restart:
+      enabled: true
+
+#  datasource:
+#    type: com.zaxxer.hikari.HikariDataSource
+#    url: jdbc:h2:mem:keycloak-quickstart-photoz;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#    url: jdbc:h2:file:./data/keycloak-quickstart-photoz;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#    username: bob
+#    password:
+#  jpa:
+#    database: H2
+#    show-sql: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/rls?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+
+logging:
+  level:
+    net.waret.demo.photoz: debug
+    org.keycloak: trace

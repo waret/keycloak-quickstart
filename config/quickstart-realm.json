@@ -111,13 +111,11 @@
             "clientId": "resource-alice",
             "secret": "secret",
             "enabled": true,
-            "baseUrl": "http://localhost:8080",
             "authorizationServicesEnabled" : true,
-            "adminUrl": "http://localhost:8080",
             "redirectUris": [
                 "http://localhost:8080/*"
             ],
-            "webOrigins" : ["http://localhost:8080"],
+            "webOrigins" : ["*"],
             "authorizationSettings": {
                 "allowRemoteResourceManagement": true,
                 "policyEnforcementMode": "ENFORCING",
@@ -211,6 +209,14 @@
                 "policyEnforcementMode": "ENFORCING",
                 "resources": [
                     {
+                        "name": "Test Client IP Resource",
+                        "type": "http://photoz.com/test-client-ip",
+                        "displayName": "Test Client IP Resource",
+                        "uris": [
+                            "/test-client-ip"
+                        ]
+                    },
+                    {
                         "name": "Admin Resources",
                         "uri": "/admin/*",
                         "type": "http://photoz.com/admin",
@@ -236,6 +242,19 @@
                         "type": "http://photoz.com/album",
                         "scopes": [
                             {
+                                "name": "album:create"
+                            },
+                            {
+                                "name": "album:view"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Detailed Album Resource",
+                        "uri": "/album/{id}",
+                        "type": "http://photoz.com/album",
+                        "scopes": [
+                            {
                                 "name": "album:delete"
                             },
                             {
@@ -246,16 +265,6 @@
                 ],
                 "policies": [
                     {
-                        "name": "Only Owner and Administrators Policy",
-                        "description": "Defines that only the resource owner and administrators can do something",
-                        "type": "aggregate",
-                        "logic": "POSITIVE",
-                        "decisionStrategy": "AFFIRMATIVE",
-                        "config": {
-                            "applyPolicies": "[\"Administration Policy\",\"Only Owner Policy\"]"
-                        }
-                    },
-                    {
                         "name": "Only Owner and Any Admin Policy",
                         "description": "Defines that only the resource owner and administrators can do something",
                         "type": "aggregate",
@@ -263,16 +272,6 @@
                         "decisionStrategy": "AFFIRMATIVE",
                         "config": {
                             "applyPolicies": "[\"Any Admin Policy\",\"Only Owner Policy\"]"
-                        }
-                    },
-                    {
-                        "name": "Administration Policy",
-                        "description": "Defines that only administrators from a specific network address can do something.",
-                        "type": "aggregate",
-                        "logic": "POSITIVE",
-                        "decisionStrategy": "UNANIMOUS",
-                        "config": {
-                            "applyPolicies": "[\"Any Admin Policy\",\"Only From a Specific Client Address\"]"
                         }
                     },
                     {
@@ -333,7 +332,7 @@
                         "decisionStrategy": "UNANIMOUS",
                         "config": {
                             "defaultResourceType": "http://photoz.com/admin",
-                            "applyPolicies": "[\"Administration Policy\"]",
+                            "applyPolicies": "[\"Any Admin Policy\"]",
                             "default": "true"
                         }
                     },
@@ -349,6 +348,17 @@
                         }
                     },
                     {
+                        "name": "Detailed Album Resource Permission",
+                        "description": "A default permission that defines access for any detailed album resource",
+                        "type": "resource",
+                        "logic": "POSITIVE",
+                        "decisionStrategy": "UNANIMOUS",
+                        "config": {
+                            "resources": "[\"Detailed Album Resource\"]",
+                            "applyPolicies": "[\"Only Owner and Any Admin Policy\"]"
+                        }
+                    },
+                    {
                         "name": "View User Permission",
                         "description": "Defines who is allowed to view an user profile",
                         "type": "scope",
@@ -358,6 +368,34 @@
                             "scopes": "[\"profile:view\"]",
                             "applyPolicies": "[\"Only From @keycloak.org or Admin\"]"
                         }
+                    },
+                    {
+                        "name": "Test Client IP Resource Permission",
+                        "description": "Test Client IP Resource Permission",
+                        "type": "resource",
+                        "logic": "POSITIVE",
+                        "decisionStrategy": "UNANIMOUS",
+                        "config": {
+                            "resources": "[\"Test Client IP Resource\"]",
+                            "applyPolicies": "[\"Only From a Specific Client Address\"]"
+                        }
+                    }
+                ],
+                "scopes": [
+                    {
+                        "name": "album:create"
+                    },
+                    {
+                        "name": "album:delete"
+                    },
+                    {
+                        "name": "album:view"
+                    },
+                    {
+                        "name": "profile:view"
+                    },
+                    {
+                        "name": "admin:manage"
                     }
                 ]
             }

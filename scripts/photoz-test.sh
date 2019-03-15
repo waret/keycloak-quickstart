@@ -8,7 +8,7 @@
 [ -z $username ] && username=alice
 [ -z $password ] && password=$username
 [ -z $res_client ] && res_client=resource-photoz
-[ -z $api_host ] && api_host=http://localhost:8081
+[ -z $api_host ] && api_host=http://localhost:8082
 [ -z $api ] && api=/album
 [ -z $rpt ] && rpt=false
 [ -z $method ] && method=

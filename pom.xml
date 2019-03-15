@@ -15,6 +15,7 @@
         <!--<module>keycloak-quickstart-bravo</module>-->
         <!--<module>keycloak-quickstart-charlie</module>-->
         <module>keycloak-quickstart-photoz</module>
-        <module>keycloak-quickstart-photoz-web</module>
+        <!--<module>keycloak-quickstart-photoz-web</module>-->
+        <module>keycloak-quickstart-rls</module>
     </modules>
 </project>

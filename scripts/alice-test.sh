@@ -1,20 +1,22 @@
 #!/bin/bash
 
-keycloak_url=http://localhost:8180
-realm=keycloak-quickstart
-access_type=public
-client_id=public-web
-client_secret=secret
-username=alice
-password=alice
-res_client=resource-alice
-api_host=http://localhost:8080
-api=/api/resourcea
-rpt=false
+[ -z $keycloak_url ] && keycloak_url=http://localhost:8180
+[ -z $realm ] && realm=keycloak-quickstart
+[ -z $access_type ] && access_type=public
+[ -z $client_id ] && client_id=public-web
+[ -z $client_secret ] && client_secret=secret
+[ -z $username ] && username=alice
+[ -z $password ] && password=$username
+[ -z $res_client ] && res_client=resource-alice
+[ -z $api_host ] && api_host=http://localhost:8081
+[ -z $api ] && api=/api/resourcea
+[ -z $rpt ] && rpt=false
+[ -z $method ] && method=
 
 function get_token_keycloak_realm_access_client_user() {
     if [[ $access_type == "public" ]]; then
         http --form \
+            --ignore-stdin \
             ${keycloak_url}/auth/realms/${realm}/protocol/openid-connect/token \
             Accept:application/json \
             client_id=${client_id} \
@@ -25,6 +27,7 @@ function get_token_keycloak_realm_access_client_user() {
             scope='openid profile email' | jq --raw-output '.access_token'
     elif [[ $access_type == "confidential" ]]; then
         http --form \
+            --ignore-stdin \
             ${keycloak_url}/auth/realms/${realm}/protocol/openid-connect/token \
             Accept:application/json \
             Authorization:" Basic $(printf "${client_id}:${client_secret}" | base64)" \
@@ -35,6 +38,7 @@ function get_token_keycloak_realm_access_client_user() {
             scope='openid profile email' | jq --raw-output '.access_token'
     else
             http --form \
+                --ignore-stdin \
                 ${keycloak_url}/auth/realms/${realm}/protocol/openid-connect/token \
                 Accept:application/json \
                 client_id=${client_id} \
@@ -56,32 +60,9 @@ function get_rpt_token_keycloak_realm_access_client_user() {
         audience=$res_client | jq --raw-output '.access_token'
 }
 
-function api() {
-    http --timeout=300 $api_host$api Authorization:" Bearer $(get_token_keycloak_realm_access_client_user)" $@
-    #curl -v -X GET $api_host$api -H Authorization:"Bearer "$(get_token_keycloak_realm_access_client_user)
-}
-
-function api_rpt() {
-    http --timeout=300 $api_host$api Authorization:" Bearer $(get_rpt_token_keycloak_realm_access_client_user)" $@
-}
-
-if [[ $# > 0 ]]; then
-    while [[ $# > 0 ]]; do
-        if [[ $1 != "--" ]]; then
-            eval $1
-            if echo $1 | grep -q username; then
-                password=$username
-            fi
-            shift
-        else
-            shift
-            break
-        fi
-    done
-    
-    if $rpt; then
-        api_rpt $@
-    else
-        api $@
-    fi
+if $rpt; then
+    http --timeout=300 $method $api_host$api $@ Authorization:" Bearer $(get_rpt_token_keycloak_realm_access_client_user)"
+    #curl -v -X GET $api_host$api $@ -H Authorization:"Bearer "$(get_token_keycloak_realm_access_client_user)
+else
+    http --timeout=300 $method $api_host$api $@ Authorization:" Bearer $(get_token_keycloak_realm_access_client_user)"
 fi

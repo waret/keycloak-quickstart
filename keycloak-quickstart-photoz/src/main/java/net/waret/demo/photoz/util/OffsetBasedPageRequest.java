@@ -1,4 +1,4 @@
-package net.waret.demo.photoz.utils;
+package net.waret.demo.photoz.util;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

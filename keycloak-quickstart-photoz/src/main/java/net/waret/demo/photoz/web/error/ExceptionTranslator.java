@@ -1,4 +1,4 @@
-package net.waret.demo.photoz.web.errors;
+package net.waret.demo.photoz.web.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
