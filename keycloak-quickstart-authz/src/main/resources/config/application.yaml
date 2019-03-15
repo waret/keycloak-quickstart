@@ -1,0 +1,22 @@
+server:
+  connection-timeout: 5000
+  port: 8082
+
+spring:
+  devtools:
+    restart:
+      enabled: true
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/authz?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+logging:
+  level:
+    net.waret.demo.authz: debug
+    org.keycloak: trace
