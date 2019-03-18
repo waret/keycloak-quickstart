@@ -26,7 +26,6 @@ import lombok.ToString;
 @Entity
 @Table(name = "rls_team")
 @NoArgsConstructor
-@ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Team {
 
@@ -36,7 +35,7 @@ public class Team {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "team_id")
     @EqualsAndHashCode.Include
     private Long teamId;
 
