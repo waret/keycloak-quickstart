@@ -72,8 +72,8 @@ public class Role {
         return this;
     }
 
-    public Role addAncestor(Role role) {
-        this.ancestors.add(role);
+    public Role removeParent(Role role) {
+        this.parents.remove(role);
         return this;
     }
 

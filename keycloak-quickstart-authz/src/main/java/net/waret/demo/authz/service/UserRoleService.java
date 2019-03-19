@@ -19,6 +19,7 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserRoleService {
@@ -199,20 +200,60 @@ public class UserRoleService {
 
     public void grantGroup(String groupName, Long resourceId, String roleField, Instant endtime,
             boolean logic) {
-        // TODO
-        resourceRepository.findById(resourceId).ifPresent(resource -> {
-            resource.getRoles().stream()
-                    .filter(role -> role.getRoleField().equalsIgnoreCase(roleField))
-                    .findFirst()
-                    .ifPresent(role -> groupRepository.findByGroupName(groupName).ifPresent(group -> {
-                        for (Role groupRole : group.getResource().getRoles()) {
-                            if (groupRole.getRoleField().equalsIgnoreCase("admin_role")
-                                    || groupRole.getRoleField().equalsIgnoreCase("member_role")) {
-                                role.addParent(groupRole).updateAncestors();
-                            }
+        resourceRepository.findById(resourceId).ifPresent(resource -> resource.getRoles().stream()
+                .filter(role -> role.getRoleField().equalsIgnoreCase(roleField))
+                .findFirst()
+                .ifPresent(role -> groupRepository.findByGroupName(groupName).ifPresent(group -> {
+                    for (Role groupRole : group.getResource().getRoles()) {
+                        if (groupRole.getRoleField().equalsIgnoreCase("admin_role")
+                                || groupRole.getRoleField().equalsIgnoreCase("member_role")) {
+                            role.addParent(groupRole).updateAncestors();
                         }
-                    }));
-        });
-
+                    }
+                })));
     }
+
+    public void revokeUser(String username, Long resourceId, String roleField) {
+        userRepository.findByUsername(username).ifPresent(user ->
+                resourceRepository.findById(resourceId)
+                        .ifPresent(resource -> resource.getRoles().stream()
+                                .filter(role -> role.getRoleField().equalsIgnoreCase(roleField))
+                                .findFirst()
+                                .ifPresent(role -> user.getGrantedRoles().remove(role))
+                        )
+        );
+    }
+
+    public void revokeGroup(String groupName, Long resourceId, String roleField) {
+        resourceRepository.findById(resourceId).ifPresent(resource -> resource.getRoles().stream()
+                .filter(role -> role.getRoleField().equalsIgnoreCase(roleField))
+                .findFirst()
+                .ifPresent(role ->
+                        groupRepository.findByGroupName(groupName).ifPresent(group -> {
+                            for (Role groupRole : group.getResource().getRoles()) {
+                                if (groupRole.getRoleField().equalsIgnoreCase("admin_role")
+                                        || groupRole.getRoleField().equalsIgnoreCase("member_role")) {
+                                    role.removeParent(groupRole).updateAncestors();
+                                }
+                            }
+                        })
+                )
+        );
+    }
+
+    public void queryResourceList(String username, String resourceType, String roleField) {
+        userRepository.findByUsername(username).map(user -> user.getGrantedRoles().stream()
+                .map(Role::getDescentdents)
+                .reduce(new HashSet<>(), (roles, roles2) -> {
+                    roles.addAll(roles2);
+                    return roles;
+                })
+                .stream()
+                .filter(role -> role.getRoleField().equalsIgnoreCase(roleField)
+                        && role.getResource().getResourceType().equalsIgnoreCase(resourceType))
+                .map(Role::getResource)
+                .collect(Collectors.toSet())
+        ).orElseThrow(() -> new RuntimeException("no user"));
+    }
+
 }

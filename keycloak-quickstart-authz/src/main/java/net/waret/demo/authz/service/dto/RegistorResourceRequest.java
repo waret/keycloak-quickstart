@@ -46,6 +46,11 @@ public class RegistorResourceRequest {
 
     }
 
+    public RegistorResourceRequest setResourceName(String resourceName) {
+        this.resourceName = resourceName;
+        return this;
+    }
+
     public RegistorResourceRequest setParentResourceId(Long parentResourceId) {
         this.parentResourceId = parentResourceId;
         return this;
