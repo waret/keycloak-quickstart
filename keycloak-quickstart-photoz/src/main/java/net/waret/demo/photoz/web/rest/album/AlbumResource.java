@@ -3,7 +3,7 @@ package net.waret.demo.photoz.web.rest.album;
 import net.waret.demo.photoz.domain.Album;
 import net.waret.demo.photoz.repository.AlbumRepository;
 import net.waret.demo.photoz.service.dto.SharedAlbum;
-import net.waret.demo.photoz.utils.OffsetBasedPageRequest;
+import net.waret.demo.photoz.util.OffsetBasedPageRequest;
 
 import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.authorization.client.AuthzClient;

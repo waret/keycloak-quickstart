@@ -4,7 +4,7 @@ import net.waret.demo.photoz.domain.Order;
 import net.waret.demo.photoz.domain.Status;
 import net.waret.demo.photoz.repository.OrderRepository;
 import net.waret.demo.photoz.web.assembler.OrderResourceAssembler;
-import net.waret.demo.photoz.web.errors.OrderNotFoundException;
+import net.waret.demo.photoz.web.error.OrderNotFoundException;
 
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceSupport;

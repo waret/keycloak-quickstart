@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @Slf4j
-class LoadDatabase {
+public class LoadDatabase {
 
     @Bean
     public CommandLineRunner initEmployeeDatabase(EmployeeRepository employeeRepository, ManagerRepository managerRepository) {

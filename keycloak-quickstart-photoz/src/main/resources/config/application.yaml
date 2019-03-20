@@ -7,25 +7,13 @@ spring:
     restart:
       enabled: true
   datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-#    url: jdbc:h2:mem:keycloak-quickstart-photoz;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    url: jdbc:h2:file:./data/keycloak-quickstart-photoz;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: bob
-    password:
-    hikari:
-      auto-commit: false
-  h2:
-    console:
-      enabled: false
+    url: jdbc:mysql://localhost:3306/photoz?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: root
   jpa:
-    database: H2
     show-sql: true
-    properties:
-      hibernate.id.new_generator_mappings: true
-      hibernate.connection.provider_disables_autocommit: true
-      hibernate.cache.use_second_level_cache: false
-      hibernate.cache.use_query_cache: false
-      hibernate.generate_statistics: true
+    hibernate:
+      ddl-auto: update
 
 keycloak:
   auth-server-url: http://localhost:8180/auth
@@ -49,32 +37,33 @@ keycloak:
 #    enforcement-mode: "PERMISSIVE"
     user-managed-access: {}
     lazy-load-paths: false
-    paths:
-      - path: /album/{id}
-        methods:
-          - method: "DELETE"
-            scopes:
-              - "album:delete"
-          - method: "GET"
-            scopes:
-              - "album:view"
-      - path: /album/shares
-        enforcement-mode: "DISABLED"
-      - path: /album
-        methods:
-          - method: "POST"
-            scopes:
-              - "album:create"
-          - method: "GET"
-            scopes:
-              - "album:view"
-      - path: /profile
-      - path: /error
-        enforcement-mode: "DISABLED"
-      - path: /admin/*
-      - path: /test-client-ip
-      - path: /api/v1/*
-        enforcement-mode: "DISABLED"
+#    paths:
+#      - path: /album/{id}
+#        methods:
+#          - method: "DELETE"
+#            scopes:
+#              - "album:delete"
+#          - method: "GET"
+#            scopes:
+#              - "album:view"
+#      - path: /album/shares
+#        enforcement-mode: "DISABLED"
+#      - path: /album
+##        name: "Album Resource"
+#        methods:
+#          - method: "POST"
+#            scopes:
+#              - "album:create"
+#          - method: "GET"
+#            scopes:
+#              - "album:view"
+#      - path: /profile
+#      - path: /error
+#        enforcement-mode: "DISABLED"
+#      - path: /admin/*
+#      - path: /test-client-ip
+#      - path: /api/v1/*
+#        enforcement-mode: "DISABLED"
 
 logging:
   level:
