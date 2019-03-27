@@ -33,11 +33,11 @@ keycloak:
         - patterns:
             - "/*"
   policy-enforcer-config:
-    enforcement-mode: "Enforcing"
-#    enforcement-mode: "PERMISSIVE"
+#    enforcement-mode: "Enforcing"
+    enforcement-mode: "PERMISSIVE"
     user-managed-access: {}
     lazy-load-paths: false
-#    paths:
+    paths:
 #      - path: /album/{id}
 #        methods:
 #          - method: "DELETE"
@@ -49,7 +49,7 @@ keycloak:
 #      - path: /album/shares
 #        enforcement-mode: "DISABLED"
 #      - path: /album
-##        name: "Album Resource"
+#        name: "Album Resource"
 #        methods:
 #          - method: "POST"
 #            scopes:
@@ -61,7 +61,8 @@ keycloak:
 #      - path: /error
 #        enforcement-mode: "DISABLED"
 #      - path: /admin/*
-#      - path: /test-client-ip
+      - path: /test-client-ip
+#      - path: /hello
 #      - path: /api/v1/*
 #        enforcement-mode: "DISABLED"
 

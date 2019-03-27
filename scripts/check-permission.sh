@@ -14,6 +14,7 @@
 [ -z $rpt ] && rpt=false
 [ -z $method ] && method=
 [ -z $permission ] && permission=52d9537b-d12a-41b7-8985-e36ae1a508a8#album:view,album:create
+[ -z $resource ] && resource=9224b267-579d-4991-bfbb-0ea7995e72bd
 
 function get_user_access_token() {
     if [[ $access_type == "public" ]]; then
@@ -55,8 +56,9 @@ function get_user_access_token() {
     fi
 }
 
-function get_client_access_token() {
-    # 通过 body 传递 client 认证信息，等价于 get_client_access_token2
+function get_protection_api_token() {
+    # protection API token (PAT)
+    # 通过 body 传递 client 认证信息，等价于 get_protection_api_token2
     http --form \
         --ignore-stdin \
         ${keycloak_url}/auth/realms/${realm}/protocol/openid-connect/token \
@@ -66,8 +68,9 @@ function get_client_access_token() {
         | jq --raw-output '.access_token'
 }
 
-function get_client_access_token2() {
-    # 通过 header 传递 client 认证信息，等价于 get_client_access_token
+function get_protection_api_token2() {
+    # protection API token (PAT)
+    # 通过 header 传递 client 认证信息，等价于 get_protection_api_token
     http --form \
         --ignore-stdin \
         ${keycloak_url}/auth/realms/${realm}/protocol/openid-connect/token \
@@ -77,7 +80,7 @@ function get_client_access_token2() {
 }
 
 function get_user_rpt() {
-    # 基于 user access token，获取 rpt，token 里包含所有可访问资源的 authorization
+    # based on user access token，obtain an RPT with all permissions granted by Keycloak
     http --form \
         --ignore-stdin \
         ${keycloak_url}/auth/realms/${realm}/protocol/openid-connect/token \
@@ -87,8 +90,8 @@ function get_user_rpt() {
         | jq --raw-output '.access_token'
 }
 
-function get_user_rpt2() {
-    # 基于 user access token 和指定的资源，获取 rpt
+function get_user_rpt_permission() {
+    # based on user access token and specified resource，obtain an RPT with all permissions granted by Keycloak
     http --form \
         --ignore-stdin \
         ${keycloak_url}/auth/realms/${realm}/protocol/openid-connect/token \
@@ -99,8 +102,22 @@ function get_user_rpt2() {
         | jq --raw-output '.access_token'
 }
 
-function get_user_rpt3() {
-    # 基于 user access token，以及 client 的认证信息，判断用户是否具有访问指定资源的权限
+function get_user_rpt2() {
+    # based on user access token, specified resource, and res client confidential, obtain an RPT with all permissions granted by Keycloak
+    # servlet adaptor里，收到用户请求后，验证当前用户是否具有当前url的访问权限：返回200时验证通过，返回403时验证失败，当前请求返回403
+    http --form \
+        --ignore-stdin \
+        ${keycloak_url}/auth/realms/${realm}/protocol/openid-connect/token \
+        Authorization:" Basic $(printf "${res_client}:${res_client_secret}" | base64)" \
+        subject_token=$(get_user_access_token) \
+        grant_type=urn:ietf:params:oauth:grant-type:uma-ticket \
+        audience=$res_client \
+        | jq --raw-output '.access_token'
+}
+
+function get_user_rpt2_permission() {
+    # based on user access token, specified resource, and res client confidential, obtain an RPT with all permissions granted by Keycloak
+    # servlet adaptor里，收到用户请求后，验证当前用户是否具有当前url的访问权限：返回200时验证通过，返回403时验证失败，当前请求返回403
     http --form \
         --ignore-stdin \
         ${keycloak_url}/auth/realms/${realm}/protocol/openid-connect/token \
@@ -117,7 +134,7 @@ function get_resource_id() {
     http \
         --ignore-stdin \
         ${keycloak_url}/auth/realms/${realm}/authz/protection/resource_set \
-        Authorization:" Bearer $(get_client_access_token)" \
+        Authorization:" Bearer $(get_protection_api_token)" \
         matchingUri==false \
         deep==false
 }
@@ -127,18 +144,18 @@ function get_resource_deep() {
     http \
         --ignore-stdin \
         ${keycloak_url}/auth/realms/${realm}/authz/protection/resource_set \
-        Authorization:" Bearer $(get_client_access_token)" \
+        Authorization:" Bearer $(get_protection_api_token)" \
         matchingUri==false \
         deep==true
 }
 
 function get_resource_deep2() {
     # 首先获取 client access token，然后基于该 token 从 resource server 端查询所有的resource
-    client_access_token=$(get_client_access_token)
+    protection_api_token=$(get_protection_api_token)
     http \
         --ignore-stdin \
         ${keycloak_url}/auth/realms/${realm}/authz/protection/resource_set \
-        Authorization:" Bearer $client_access_token" \
+        Authorization:" Bearer $protection_api_token" \
         matchingUri==false \
         deep==false \
         | jq -r '.[]' \
@@ -146,17 +163,17 @@ function get_resource_deep2() {
             http \
                 --ignore-stdin \
                 ${keycloak_url}/auth/realms/${realm}/authz/protection/resource_set/$line \
-                Authorization:" Bearer $client_access_token"
+                Authorization:" Bearer $protection_api_token"
         done
 }
 
 function get_resource_deep3() {
     res_id=$1
-    client_access_token=$(get_client_access_token)
+    protection_api_token=$(get_protection_api_token)
     http \
         --ignore-stdin \
         ${keycloak_url}/auth/realms/${realm}/authz/protection/resource_set/$res_id \
-        Authorization:" Bearer $client_access_token"
+        Authorization:" Bearer $protection_api_token"
 }
 
 function get_uma2_configuration() {
@@ -179,7 +196,7 @@ function create_resource() {
         POST \
         ${keycloak_url}/auth/realms/${realm}/authz/protection/resource_set \
         content-type:application/json \
-        Authorization:" Bearer $(get_client_access_token)"
+        Authorization:" Bearer $(get_protection_api_token)"
 {
   "name": "$name",
   "type": "http://photoz.com/album",
@@ -208,7 +225,7 @@ function create_resource2() {
         POST \
         ${keycloak_url}/auth/realms/${realm}/authz/protection/resource_set \
         content-type:application/json \
-        Authorization:" Bearer $(get_client_access_token)" <<<"
+        Authorization:" Bearer $(get_protection_api_token)" <<<"
 {
   \"name\": \"$name\",
   \"type\": \"http://photoz.com/album\",
@@ -236,7 +253,7 @@ function update_resource() {
         PUT \
         ${keycloak_url}/auth/realms/${realm}/authz/protection/resource_set/9224b267-579d-4991-bfbb-0ea7995e72bd \
         content-type:application/json \
-        Authorization:" Bearer $(get_client_access_token)" <<<"
+        Authorization:" Bearer $(get_protection_api_token)" <<<"
 {
   \"name\": \"waret\",
   \"type\": \"http://photoz.com/album\",
@@ -265,21 +282,37 @@ function update_resource() {
 "
 }
 
-function add_permission_rpt() {
-    # 如果没有下面的参数，则返回 403 failed: Client application [public-web] is not registered as a resource server.
+function delete_resource() {
+    res_id=$1
+    http \
+        DELETE\
+        ${keycloak_url}/auth/realms/${realm}/authz/protection/resource_set/$res_id \
+        Authorization:" Bearer $(get_user_rpt)"
+}
+
+function add_permission() {
+    # get_user_access_token or get_user_rpt
     client_id=resource-photoz
     access_type=confidential
     cat <<EOF | http \
         POST \
-        ${keycloak_url}/auth/realms/${realm}/authz/protection/uma-policy/9224b267-579d-4991-bfbb-0ea7995e72bd \
+        ${keycloak_url}/auth/realms/${realm}/authz/protection/uma-policy/$resource \
         content-type:application/json \
-        Authorization:" Bearer $(get_user_rpt)"
+        Authorization:" Bearer $(get_user_access_token)"
 {
-        "name": "Any people manager 5",
-        "description": "Allow access to any people manager 5",
+        "name": "Any people manager 8",
+        "description": "Allow access to any people manager 8",
         "roles": ["user"]
 }
 EOF
+}
+
+function query_permission_pat() {
+    http \
+        GET \
+        ${keycloak_url}/auth/realms/${realm}/authz/protection/uma-policy \
+        Authorization:" Bearer $(get_user_rpt)" \
+        resource==$resource
 }
 
 function query_permission_user() {
@@ -288,25 +321,10 @@ function query_permission_user() {
     http \
         GET \
         ${keycloak_url}/auth/realms/${realm}/authz/protection/uma-policy \
-        Authorization:" Bearer $(get_user_access_token)" \
-        resource==9224b267-579d-4991-bfbb-0ea7995e72bd
+        Authorization:" Bearer $(get_protection_api_token)" \
+        resource==$resource
 }
 
-function add_permission_user() {
-    client_id=resource-photoz
-    access_type=confidential
-    cat <<EOF | http \
-        POST \
-        ${keycloak_url}/auth/realms/${realm}/authz/protection/uma-policy/9224b267-579d-4991-bfbb-0ea7995e72bd \
-        content-type:application/json \
-        Authorization:" Bearer $(get_user_access_token)"
-{
-        "name": "Any people manager 4",
-        "description": "Allow access to any people manager 4",
-        "roles": ["user"]
-}
-EOF
-}
 
 #{
 #  "type": "resource",
@@ -321,14 +339,6 @@ EOF
 #    "a8c7fbf2-f604-4593-90ff-b7567c15f739"
 #  ]
 #}
-
-function delete_resource() {
-    res_id=$1
-    http \
-        DELETE\
-        ${keycloak_url}/auth/realms/${realm}/authz/protection/resource_set/$res_id \
-        Authorization:" Bearer $(get_user_rpt)"
-}
 
 
 # TODO 创建 policy 接口

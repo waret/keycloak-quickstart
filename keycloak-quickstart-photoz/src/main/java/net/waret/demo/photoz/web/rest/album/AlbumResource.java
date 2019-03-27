@@ -9,6 +9,7 @@ import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.authorization.client.AuthzClient;
 import org.keycloak.authorization.client.ClientAuthorizationContext;
 import org.keycloak.authorization.client.resource.ProtectionResource;
+import org.keycloak.representations.idm.authorization.Permission;
 import org.keycloak.representations.idm.authorization.PermissionTicketRepresentation;
 import org.keycloak.representations.idm.authorization.ResourceRepresentation;
 import org.keycloak.representations.idm.authorization.ScopeRepresentation;
@@ -150,6 +151,9 @@ public class AlbumResource {
 
             ResourceRepresentation response = getAuthzClient().protection().resource().create(albumResource);
 
+            for (Permission permission : getAuthorizationContext ().getPermissions()) {
+                log.debug("" + permission);
+            }
             album.setExternalId(response.getId());
         } catch (Exception e) {
             throw new RuntimeException("Could not register protected resource.", e);
