@@ -307,7 +307,9 @@ function add_permission() {
 EOF
 }
 
-function query_permission_pat() {
+function query_permission_rpt() {
+    client_id=resource-photoz
+    access_type=confidential
     http \
         GET \
         ${keycloak_url}/auth/realms/${realm}/authz/protection/uma-policy \
@@ -315,9 +317,14 @@ function query_permission_pat() {
         resource==$resource
 }
 
-function query_permission_user() {
-    client_id=resource-photoz
-    access_type=confidential
+function query_permission_pat() {
+    http \
+        GET \
+        ${keycloak_url}/auth/realms/${realm}/authz/protection/uma-policy \
+        Authorization:" Bearer $(get_protection_api_token)"
+}
+
+function query_permission_pat_resource() {
     http \
         GET \
         ${keycloak_url}/auth/realms/${realm}/authz/protection/uma-policy \
