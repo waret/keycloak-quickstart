@@ -23,7 +23,7 @@ services:
       POSTGRES_PASSWORD: "keycloak"
 
   keycloak:
-    image: jboss/keycloak:4.8.3.Final
+    image: jboss/keycloak:5.0.0
     depends_on:
     - keycloak-db
     networks:
